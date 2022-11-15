@@ -1,0 +1,4 @@
+time="2022-11-15T15:14:30+03:00" level=info msg="create router" func="main.main()" file="app.go:15"
+time="2022-11-15T15:14:30+03:00" level=info msg="register user handler" func="main.main()" file="app.go:18"
+time="2022-11-15T15:14:30+03:00" level=info msg="start application" func="main.startServer()" file="app.go:28"
+time="2022-11-15T15:14:30+03:00" level=info msg="server is listening port 8080" func="main.startServer()" file="app.go:40"
