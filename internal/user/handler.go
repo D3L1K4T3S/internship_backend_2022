@@ -1,6 +1,7 @@
 package user
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"internship_bachend_2022/internal/apperror"
@@ -37,12 +38,31 @@ func (handler *handler) GetList(writer http.ResponseWriter, request *http.Reques
 	//writer.WriteHeader(200)
 	//writer.Write([]byte("list of users"))
 
+	data := make(map[string]string)
+	data["message"] = "hello world"
+
+	js, err := json.Marshal(data)
+	if err != nil {
+		panic(err)
+	}
+	writer.Write(js)
+
 	return apperror.ErrorNotFound
+}
+
+type Msg struct {
+	message string `json:"message"`
 }
 
 func (handler *handler) CreateUser(writer http.ResponseWriter, request *http.Request) error {
 	//writer.WriteHeader(201)
 	//writer.Write([]byte("create user"))
+
+	writer.Header().Set("Content-Type", "application/json")
+	data := make(map[string]string)
+	decoder := json.NewDecoder(request.Body)
+	decoder.Decode(&data)
+	fmt.Println(data)
 
 	return fmt.Errorf("this is test")
 }
