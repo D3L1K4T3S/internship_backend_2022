@@ -1,0 +1,14 @@
+info:
+  contact: {}
+paths:
+  /api/getlist:
+    get:
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+      summary: GetList metric
+      tags:
+      - Metrics
+swagger: "2.0"

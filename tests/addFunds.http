@@ -1,0 +1,7 @@
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "id": "2",
+  "balance": "100"
+}

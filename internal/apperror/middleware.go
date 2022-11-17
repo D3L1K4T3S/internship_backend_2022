@@ -18,19 +18,19 @@ func Middleware(handler applicationHandler) http.HandlerFunc {
 			if errors.As(err, &applicationError) {
 				if errors.Is(err, ErrorNotFound) {
 					writer.WriteHeader(http.StatusNotFound)
-					writer.Write(ErrorNotFound.Marshal())
+					_, _ = writer.Write(ErrorNotFound.Marshal())
 					return
 				}
 				//Остальные перечисленные ошибки
 
 				err = err.(*ApplicationError)
 				writer.WriteHeader(http.StatusBadRequest)
-				writer.Write(applicationError.Marshal())
+				_, _ = writer.Write(applicationError.Marshal())
 				return
 			}
 
 			writer.WriteHeader(http.StatusTeapot)
-			writer.Write(systemError(err).Marshal())
+			_, _ = writer.Write(systemError(err).Marshal())
 		}
 	}
 }
