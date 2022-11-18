@@ -3,10 +3,11 @@ package apperror
 import "encoding/json"
 
 var (
-	ErrorNotFound    = NewApplicationError(nil, "not found", "error not found", "1234")
-	NotFoundUser     = NewApplicationError(nil, "user not found with this id", "incorrect id in request", "0001")
-	IncorrectRequest = NewApplicationError(nil, "not enough parameters or parameters without values", "request invalid", "0002")
-	OrderExist       = NewApplicationError(nil, "an order with this number has already been created", "incorrect orderId", "0003")
+	ErrorNotFound      = NewApplicationError(nil, "not found", "error not found", "0000")
+	NotFoundUser       = NewApplicationError(nil, "user not found with this id", "incorrect id in request", "0001")
+	IncorrectRequest   = NewApplicationError(nil, "not enough parameters or parameters without values", "request invalid", "0002")
+	OrderExist         = NewApplicationError(nil, "an order with this number has already been created", "incorrect orderId", "0003")
+	TransactionNotPass = NewApplicationError(nil, "transaction don't pass for this order", "", "0004")
 )
 
 type ApplicationError struct {

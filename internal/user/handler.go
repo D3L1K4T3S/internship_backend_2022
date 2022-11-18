@@ -160,9 +160,6 @@ func (handler *handler) CreateOrder(writer http.ResponseWriter, request *http.Re
 // @Router revenueRecognition[patch]
 func (handler *handler) RevenueRecognition(writer http.ResponseWriter, request *http.Request) error {
 
-	//TODO: Сделать проверку статуса ордера (чтобы нельзя было списать за ордера которые не хватило средств)
-	// Также сделать изменение статуса ордера после списания средств на статус 'Done'
-
 	var order orders.Orders
 	decoder := json.NewDecoder(request.Body)
 	err := decoder.Decode(&order)
@@ -171,7 +168,7 @@ func (handler *handler) RevenueRecognition(writer http.ResponseWriter, request *
 		return err
 	}
 
-	err = handler.repository.RevenueRecognition(context.TODO(), order.Id, order.Cost)
+	err = handler.repository.RevenueRecognition(context.TODO(), order.UserId, order.Id, order.Cost)
 	if err != nil {
 		handler.logger.Info(err)
 		return err

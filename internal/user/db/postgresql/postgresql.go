@@ -3,17 +3,14 @@ package postgresql
 import (
 	"context"
 	"fmt"
-	_ "fmt"
 	"github.com/jackc/pgx/v5/pgconn"
+	_ "github.com/jackc/pgx/v5/pgconn"
 	"internship_bachend_2022/internal/apperror"
 	"internship_bachend_2022/internal/transactions"
-	"strconv"
-
-	//sq "github.com/Masterminds/squirrel"
-	_ "github.com/jackc/pgx/v5/pgconn"
 	"internship_bachend_2022/internal/user"
 	"internship_bachend_2022/pkg/client/postgreSQL"
 	"internship_bachend_2022/pkg/logging"
+	"strconv"
 	"strings"
 )
 
@@ -21,7 +18,6 @@ const (
 	Debiting       = "Debiting"
 	Refund         = "Refund"
 	Done           = "Done"
-	NotCompleted   = "Not completed"
 	NotEnoughFunds = "Not enough funds"
 )
 
@@ -212,11 +208,11 @@ func (repository *repository) GetBalance(ctx context.Context, id string) (user.U
 	return usr, nil
 }
 
-func (repository *repository) RevenueRecognition(ctx context.Context, id, amount string) error {
+func (repository *repository) RevenueRecognition(ctx context.Context, idUser, idOrder, amount string) error {
 
-	getReserved := `SELECT reserved FROM users WHERE id = $1`
+	getReserved := `SELECT reserved FROM users WHERE idUser = $1`
 	var res float64
-	if err := repository.client.QueryRow(ctx, getReserved, id).Scan(&res); err != nil {
+	if err := repository.client.QueryRow(ctx, getReserved, idUser).Scan(&res); err != nil {
 		if pgErr, ok := err.(*pgconn.PgError); ok {
 			repository.logger.Infof("Detail: %s, Code: %s, Where: %s", pgErr.Detail, pgErr.Code, pgErr.Where)
 			return err
@@ -233,9 +229,27 @@ func (repository *repository) RevenueRecognition(ctx context.Context, id, amount
 	if res-amt < 0 {
 		return apperror.IncorrectRequest
 	} else {
-		query := `UPDATE users SET reserved = reserved - $1 WHERE id = $2 RETURNING id`
-		repository.logger.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(query)))
-		_ = repository.client.QueryRow(ctx, query, amount, id)
+		getTrans := `SELECT pass FROM transactions WHERE order_id = $1 and type = $2`
+		repository.logger.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(getTrans)))
+		var pass bool
+		if err := repository.client.QueryRow(ctx, getTrans, idOrder, Debiting).Scan(&pass); err != nil {
+			if pgErr, ok := err.(*pgconn.PgError); ok {
+				repository.logger.Infof("Detail: %s, Code: %s, Where: %s", pgErr.Detail, pgErr.Code, pgErr.Where)
+				return err
+			}
+			return err
+		}
+
+		if pass {
+			changeStatus := `UPDATE orders SET status = $1 WHERE idUser = $2`
+			repository.logger.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(changeStatus)))
+			_ = repository.client.QueryRow(ctx, changeStatus, Done, idOrder)
+			query := `UPDATE users SET reserved = reserved - $1 WHERE idUser = $2 RETURNING idUser`
+			repository.logger.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(query)))
+			_ = repository.client.QueryRow(ctx, query, amount, idUser)
+		} else {
+			return apperror.TransactionNotPass
+		}
 		return nil
 	}
 }

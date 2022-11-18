@@ -16,7 +16,7 @@ type Repository interface {
 	ExistOrderId(ctx context.Context, id string) (bool, error)
 	GetTransactions(ctx context.Context, id string) ([]transactions.Transactions, error)
 	DeleteUser(ctx context.Context, id string) error
-	RevenueRecognition(ctx context.Context, id, amount string) error
+	RevenueRecognition(ctx context.Context, idUser, idOrder, amount string) error
 }
 
 type SortOptions struct {
