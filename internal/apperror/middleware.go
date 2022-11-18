@@ -21,7 +21,6 @@ func Middleware(handler applicationHandler) http.HandlerFunc {
 					_, _ = writer.Write(ErrorNotFound.Marshal())
 					return
 				}
-				//Остальные перечисленные ошибки
 
 				err = err.(*ApplicationError)
 				writer.WriteHeader(http.StatusBadRequest)

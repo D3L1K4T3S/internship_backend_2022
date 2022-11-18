@@ -33,7 +33,7 @@ func NewHandler(repository Repository, logger *logging.Logger) handlers.Handler 
 
 func (handler *handler) Register(router *httprouter.Router) {
 	router.HandlerFunc(http.MethodGet, userURL, apperror.Middleware(handler.GetBalance))
-	router.HandlerFunc(http.MethodPut, usersURL, apperror.Middleware(handler.AddingFunds))
+	router.HandlerFunc(http.MethodPost, usersURL, apperror.Middleware(handler.AddingFunds))
 	router.HandlerFunc(http.MethodPost, orderURL, apperror.Middleware(handler.CreateOrder))
 	router.HandlerFunc(http.MethodPatch, userURL, apperror.Middleware(handler.RevenueRecognition))
 	router.HandlerFunc(http.MethodDelete, userURL, apperror.Middleware(handler.DeleteUser))
