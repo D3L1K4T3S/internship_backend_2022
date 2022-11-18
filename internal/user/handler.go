@@ -188,14 +188,36 @@ func (handler *handler) RevenueRecognition(writer http.ResponseWriter, request *
 // @Failure 404
 // @Router /api/getTransactions [get]
 func (handler *handler) GetTransactions(writer http.ResponseWriter, request *http.Request) error {
-	//var id, sort, list string
-	//id = request.URL.Query().Get("id")
-	//sort = request.URL.Query().Get("sort")
-	//list = request.URL.Query().Get("list")
-	//
-	//if id == "" {
-	//	return apperror.IncorrectRequest
-	//}
+
+	writer.Header().Set("Content-Type", "application/json")
+
+	var id string
+	var options Options
+
+	id = request.URL.Query().Get("id")
+	options.Order = request.URL.Query().Get("sort")
+	options.Field = request.URL.Query().Get("field")
+	options.List = request.URL.Query().Get("list")
+	options.Records = request.URL.Query().Get("limit")
+
+	handler.logger.Info(options)
+
+	if id == "" || options.Order == "" || options.Field == "" || options.List == "" {
+		return apperror.IncorrectRequest
+	}
+
+	data, err := handler.repository.GetTransactions(context.TODO(), id, options)
+	if err != nil {
+		handler.logger.Info(err)
+		return err
+	}
+
+	jsData, err := json.Marshal(data)
+	if err != nil {
+		handler.logger.Info(err)
+		return err
+	}
+	writer.Write(jsData)
 
 	return nil
 }

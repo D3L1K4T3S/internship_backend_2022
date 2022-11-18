@@ -2,6 +2,7 @@ package sort
 
 import (
 	"context"
+	"internship_bachend_2022/internal/user"
 	"net/http"
 	"strings"
 )
@@ -31,7 +32,7 @@ func Middleware(handler http.HandlerFunc, defaultSortFierld, defaultSortOrder st
 			}
 		}
 
-		options := Options{
+		options := user.Options{
 			Field: sortBy,
 			Order: sordOrder,
 		}
@@ -41,8 +42,4 @@ func Middleware(handler http.HandlerFunc, defaultSortFierld, defaultSortOrder st
 
 		handler(writer, request)
 	}
-}
-
-type Options struct {
-	Field, Order string
 }

@@ -14,11 +14,11 @@ type Repository interface {
 	GetBalance(ctx context.Context, id string) (User, error)
 	ExistUserId(ctx context.Context, id string) (bool, error)
 	ExistOrderId(ctx context.Context, id string) (bool, error)
-	GetTransactions(ctx context.Context, id string) ([]transactions.Transactions, error)
+	GetTransactions(ctx context.Context, id string, options Options) ([]transactions.Transactions, error)
 	DeleteUser(ctx context.Context, id string) error
 	RevenueRecognition(ctx context.Context, idUser, idOrder, amount string) error
 }
 
-type SortOptions struct {
-	Field, Order string
+type Options struct {
+	Field, Order, List, Records string
 }

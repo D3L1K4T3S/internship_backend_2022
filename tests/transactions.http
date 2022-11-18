@@ -1,6 +1,4 @@
-GET localhost:8080/trans/?id=1
+GET localhost:8080/trans/?id=1&sort=ASC&field=time_trans&list=1&limit=1
 Content-Type: application/json
-
-
 
 ###

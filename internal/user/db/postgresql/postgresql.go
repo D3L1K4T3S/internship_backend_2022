@@ -254,23 +254,33 @@ func (repository *repository) RevenueRecognition(ctx context.Context, idUser, id
 	}
 }
 
-func (repository *repository) GetTransactions(ctx context.Context, id string) ([]transactions.Transactions, error) {
-	// TODO: Реализовать пагинацию и сортировку
-	// TODO: Изменить запрос на вывод транзакция конкретного пользователя
-
+func (repository *repository) GetTransactions(ctx context.Context, id string, options user.Options) ([]transactions.Transactions, error) {
 	var trns []transactions.Transactions
+	var query string
 
-	query := `SELECT 
-    	transactions.type, 
-    	transactions.time_trans, 
-    	transactions.amount, 
-    	transactions.comment
-	FROM orders LEFT JOIN transactions ON orders.transaction_id = transactions.id 
-	WHERE orders.user_id = $1;`
-
+	if options.Order == "ASC" {
+		query = `SELECT services.name, transactions.type, 
+       transactions.time_trans, transactions.amount, transactions.pass,
+       transactions.comment 
+	   FROM services RIGHT JOIN orders ON services.id = orders.service_id RIGHT JOIN transactions ON transactions.order_id = orders.id 
+	   WHERE orders.user_id = $1 GROUP BY (orders.user_id, services.name, transactions.type, transactions.time_trans, transactions.amount, transactions.pass, transactions.comment) ORDER BY $2 ASC OFFSET $3 LIMIT $4;`
+	} else {
+		query = `SELECT services.name, transactions.type, 
+       transactions.time_trans, transactions.amount, transactions.pass,
+       transactions.comment 
+	   FROM services RIGHT JOIN orders ON services.id = orders.service_id RIGHT JOIN transactions ON transactions.order_id = orders.id 
+	   WHERE orders.user_id = $1 GROUP BY (orders.user_id, services.name, transactions.type, transactions.time_trans, transactions.amount, 
+	   transactions.pass, transactions.comment) ORDER BY $2 DESC OFFSET $3 LIMIT $4;`
+	}
 	repository.logger.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(query)))
 
-	rows, err := repository.client.Query(ctx, query, id)
+	skp, err := strconv.ParseFloat(options.List, 64)
+	limit, err := strconv.ParseFloat(options.Records, 64)
+
+	var pss bool
+
+	off := (skp - 1) * limit
+	rows, err := repository.client.Query(ctx, query, id, options.Field, off, options.Records)
 	if err != nil {
 		repository.logger.Fatal(err)
 		return trns, err
@@ -278,11 +288,13 @@ func (repository *repository) GetTransactions(ctx context.Context, id string) ([
 
 	for rows.Next() {
 		var tmp transactions.Transactions
-		err := rows.Scan(&tmp.Type, &tmp.TimeTrans, &tmp.Amount, &tmp.Comment)
+		err := rows.Scan(&tmp.Name, &tmp.Type, &tmp.TimeTrans, &tmp.Amount, &pss, &tmp.Comment)
 		if err != nil {
 			repository.logger.Fatal(err)
 			return trns, err
 		}
+
+		tmp.Pass = strconv.FormatBool(pss)
 		trns = append(trns, tmp)
 	}
 
