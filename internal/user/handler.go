@@ -9,6 +9,7 @@ import (
 	"internship_bachend_2022/internal/orders"
 	"internship_bachend_2022/pkg/logging"
 	"net/http"
+	"strconv"
 )
 
 const (
@@ -200,9 +201,19 @@ func (handler *handler) GetTransactions(writer http.ResponseWriter, request *htt
 	options.List = request.URL.Query().Get("list")
 	options.Records = request.URL.Query().Get("limit")
 
-	handler.logger.Info(options)
+	list, err := strconv.ParseFloat(options.List, 64)
+	if err != nil {
+		handler.logger.Info(err)
+		return err
+	}
 
-	if id == "" || options.Order == "" || options.Field == "" || options.List == "" {
+	limit, err := strconv.ParseFloat(options.Records, 64)
+	if err != nil {
+		handler.logger.Info(err)
+		return err
+	}
+
+	if id == "" || options.Order == "" || options.Field == "" || options.List == "" || options.Field != "time_trans" && options.Field != "amount" || options.Order != "ASC" && options.Order != "DESC" || limit < 1 || list < 1 {
 		return apperror.IncorrectRequest
 	}
 
@@ -217,7 +228,11 @@ func (handler *handler) GetTransactions(writer http.ResponseWriter, request *htt
 		handler.logger.Info(err)
 		return err
 	}
-	writer.Write(jsData)
+	_, err = writer.Write(jsData)
+	if err != nil {
+		handler.logger.Info(err)
+		return err
+	}
 
 	return nil
 }
