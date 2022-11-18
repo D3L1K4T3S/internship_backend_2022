@@ -1,14 +1,69 @@
 info:
   contact: {}
 paths:
-  /api/getlist:
-    get:
+  /api/addingFunds:
+    post:
+      description: Add funds user by id
       responses:
-        "204":
-          description: No Content
-        "400":
-          description: Bad Request
-      summary: GetList metric
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: AddingFunds
       tags:
-      - Metrics
+      - User
+  /api/createOrder:
+    post:
+      description: Create order by user_id, service_id, amount
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: CreateOrder
+      tags:
+      - User
+  /api/getBalance:
+    get:
+      description: Get user balance by id
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: GetBalance
+      tags:
+      - User
+  /api/getTransactions:
+    get:
+      description: get transactions by user id
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: GetTransactions
+      tags:
+      - User
+  /api/revenueRecognition:
+    delete:
+      description: Delete user from db
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: DeleteUser
+      tags:
+      - User
+    patch:
+      description: Debiting funds from a temporary account to the company's bank
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: RevenueRecognition
+      tags:
+      - User
 swagger: "2.0"

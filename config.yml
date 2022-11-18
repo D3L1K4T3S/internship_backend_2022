@@ -1,5 +1,4 @@
 ---
-
 is_debug: true
 listen:
   type: port

@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  postgreSQLdb:
+    image: "postgres:14"
+    container_name: "postgres"
+    restart: always
+    environment:
+      POSTGRES_DB: "avito"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    volumes:
+      - "./postgres:/var/lib/postgresql/data"
+    ports:
+      - "5432:5432"
+
+  application:
+    image: restapi
+    container_name: restapi
+    build: .
+    env_file:
+      - config.yml
+    ports:
+      - "8080:8080"
+    links:
+      - postgreSQLdb

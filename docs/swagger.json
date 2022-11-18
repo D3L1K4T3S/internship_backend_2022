@@ -4,18 +4,102 @@
         "contact": {}
     },
     "paths": {
-        "/api/getlist": {
-            "get": {
+        "/api/addingFunds": {
+            "post": {
+                "description": "Add funds user by id",
                 "tags": [
-                    "Metrics"
+                    "User"
                 ],
-                "summary": "GetList metric",
+                "summary": "AddingFunds",
                 "responses": {
-                    "204": {
-                        "description": "No Content"
+                    "200": {
+                        "description": "OK"
                     },
-                    "400": {
-                        "description": "Bad Request"
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/api/createOrder": {
+            "post": {
+                "description": "Create order by user_id, service_id, amount",
+                "tags": [
+                    "User"
+                ],
+                "summary": "CreateOrder",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/api/getBalance": {
+            "get": {
+                "description": "Get user balance by id",
+                "tags": [
+                    "User"
+                ],
+                "summary": "GetBalance",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/api/getTransactions": {
+            "get": {
+                "description": "get transactions by user id",
+                "tags": [
+                    "User"
+                ],
+                "summary": "GetTransactions",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/api/revenueRecognition": {
+            "delete": {
+                "description": "Delete user from db",
+                "tags": [
+                    "User"
+                ],
+                "summary": "DeleteUser",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "patch": {
+                "description": "Debiting funds from a temporary account to the company's bank",
+                "tags": [
+                    "User"
+                ],
+                "summary": "RevenueRecognition",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
                     }
                 }
             }

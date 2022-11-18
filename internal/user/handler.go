@@ -32,7 +32,6 @@ func NewHandler(repository Repository, logger *logging.Logger) handlers.Handler 
 
 func (handler *handler) Register(router *httprouter.Router) {
 	router.HandlerFunc(http.MethodGet, userURL, apperror.Middleware(handler.GetBalance))
-	//ПРоверить через метод PUT (был POST)
 	router.HandlerFunc(http.MethodPut, usersURL, apperror.Middleware(handler.AddingFunds))
 	router.HandlerFunc(http.MethodPost, orderURL, apperror.Middleware(handler.CreateOrder))
 	router.HandlerFunc(http.MethodPatch, userURL, apperror.Middleware(handler.RevenueRecognition))
@@ -47,7 +46,7 @@ func (handler *handler) Register(router *httprouter.Router) {
 // @Tags User
 // @Success 200
 // @Failure 404
-// @Router getBalance[get]
+// @Router /api/getBalance [get]
 func (handler *handler) GetBalance(writer http.ResponseWriter, request *http.Request) error {
 
 	var id string
@@ -82,7 +81,7 @@ func (handler *handler) GetBalance(writer http.ResponseWriter, request *http.Req
 // @Tags User
 // @Success 200
 // @Failure 404
-// @Router addingFunds [post]
+// @Router /api/addingFunds [post]
 func (handler *handler) AddingFunds(writer http.ResponseWriter, request *http.Request) error {
 	writer.Header().Set("Content-Type", "application/json")
 
@@ -123,7 +122,7 @@ func (handler *handler) AddingFunds(writer http.ResponseWriter, request *http.Re
 // @Tags User
 // @Success 200
 // @Failure 404
-// @Router createOrder [post]
+// @Router /api/createOrder [post]
 func (handler *handler) CreateOrder(writer http.ResponseWriter, request *http.Request) error {
 
 	decoder := json.NewDecoder(request.Body)
@@ -160,7 +159,7 @@ func (handler *handler) CreateOrder(writer http.ResponseWriter, request *http.Re
 // @Tags User
 // @Success 200
 // @Failure 404
-// @Router revenueRecognition[patch]
+// @Router /api/revenueRecognition [patch]
 func (handler *handler) RevenueRecognition(writer http.ResponseWriter, request *http.Request) error {
 
 	var order orders.Orders
@@ -187,7 +186,7 @@ func (handler *handler) RevenueRecognition(writer http.ResponseWriter, request *
 // @Tags User
 // @Success 200
 // @Failure 404
-// @Router getTransactions[get]
+// @Router /api/getTransactions [get]
 func (handler *handler) GetTransactions(writer http.ResponseWriter, request *http.Request) error {
 	//var id, sort, list string
 	//id = request.URL.Query().Get("id")
@@ -208,7 +207,7 @@ func (handler *handler) GetTransactions(writer http.ResponseWriter, request *htt
 // @Tags User
 // @Success 200
 // @Failure 404
-// @Router revenueRecognition[delete]
+// @Router /api/revenueRecognition [delete]
 func (handler *handler) DeleteUser(writer http.ResponseWriter, request *http.Request) error {
 
 	decoder := json.NewDecoder(request.Body)
