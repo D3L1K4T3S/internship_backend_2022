@@ -4,7 +4,7 @@
 
 The application provides an HTTP API and accepts/gives requests/responses in JSON format, it itself is written in Golang. The PostgreSQL 14 DBMS was used. Docker and Swagger were also used. All the additional points of the task related to the output of data in CSV format and the output of all transactions with the condition of sorting and pagination were completed.
 
-## Shema Postgre
+## Diagram Postgre
 
 ![Postgre](65ab2aad2b6e8f891677c719f0591885.png)
 
@@ -19,9 +19,8 @@ The application provides an HTTP API and accepts/gives requests/responses in JSO
 
 #### Balance
 ##### Request
-```json
+```
 GET http://localhost:8080/user/?id=1
-Content-Type: application/json  
 ```
 ##### Response
 ```json
@@ -33,9 +32,8 @@ Content-Type: application/json
 ```
 
 ##### Request
-```json
+```
 GET http://localhost:8080/user/?id=3
-Content-Type: application/json  
 ```
 ##### Response
 ```json
@@ -47,9 +45,8 @@ Content-Type: application/json
 ```
 
 ##### Request
-```json
+```
 GET http://localhost:8080/user/?id
-Content-Type: application/json  
 ```
 ##### Response
 ```json
@@ -63,10 +60,12 @@ Content-Type: application/json
 #### Add
 
 ##### Request
-```json
+```
 POST http://localhost:8080/users  
 Content-Type: application/json  
-  
+```
+
+```json
 {  
   "id": "1",  
   "balance": "100"
@@ -79,13 +78,11 @@ Content-Type: application/json
 
 #### Create
 ##### Request
-```json
+```
 POST http://localhost:8080/users  
-Content-Type: application/json  
-  
-POST http://localhost:8080/order  
-Content-Type: application/json  
-  
+Content-Type: application/json
+```
+```json
 {  
   "orderId": "5",  
   "userId": "1",  
@@ -98,10 +95,11 @@ Content-Type: application/json
 {}
 ```
 ##### Request
-```json
+```
 POST http://localhost:8080/order  
 Content-Type: application/json  
-  
+```
+```json
 {  
   "orderId": "2",  
   "userId": "1",  
@@ -121,10 +119,12 @@ Content-Type: application/json
 #### Revenue
 
 ##### Request
-```json
+```
 PATCH http://localhost:8080/user/  
-Content-Type: application/json  
-  
+Content-Type: application/json 
+```
+
+```json
 {  
   "orderId": "1",  
   "userId": "1",  
@@ -138,14 +138,15 @@ Content-Type: application/json
 ```
 
 ##### Request
-```json
+```
 PATCH http://localhost:8080/user/  
-Content-Type: application/json  
-  
+Content-Type: application/json 
+```
+```json
 {  
   "orderId": "1",  
   "userId": "1",  
-  "serviceId": "2",  
+  "serviceId": "2"  
 }
 ```
 ##### Response
@@ -160,9 +161,8 @@ Content-Type: application/json
 #### Output
 
 ##### Request
-```json
-GET localhost:8080/trans/?id=1&sort=ASC&field=time_trans&list=1&limit=1  
-Content-Type: application/json
+```
+GET localhost:8080/trans/?id=1&sort=ASC&field=time_trans&list=1&limit=1
 ```
 ##### Response
 ```json
@@ -182,9 +182,8 @@ Content-Type: application/json
 ```
 
 ##### Request
-```json
+```
 GET localhost:8080/trans/?id=1&sort=ASC&field=time_trans&list=1&limit=0  
-Content-Type: application/json
 ```
 ##### Response
 ```json
@@ -197,12 +196,11 @@ Content-Type: application/json
 
 #### Report
 ##### Request
-```json
-GET localhost:8080/total/?year=2022&month=11  
-Content-Type: text/csv  
+```
+GET localhost:8080/total/?year=2022&month=11   
 ```
 ##### Response
-``` text/csv
+``` 
 File saved in internship_backend_2022/files/total.csv
 ```
 ##### Example a file
@@ -231,9 +229,8 @@ File saved in internship_backend_2022/files/total.csv
 
 #### Баланс
 ##### Request
-```json
+```
 GET http://localhost:8080/user/?id=1
-Content-Type: application/json  
 ```
 ##### Response
 ```json
@@ -245,9 +242,8 @@ Content-Type: application/json
 ```
 
 ##### Request
-```json
+```
 GET http://localhost:8080/user/?id=3
-Content-Type: application/json  
 ```
 ##### Response
 ```json
@@ -259,9 +255,8 @@ Content-Type: application/json
 ```
 
 ##### Request
-```json
+```
 GET http://localhost:8080/user/?id
-Content-Type: application/json  
 ```
 ##### Response
 ```json
@@ -275,10 +270,10 @@ Content-Type: application/json
 #### Добавление
 
 ##### Request
-```json
-POST http://localhost:8080/users  
-Content-Type: application/json  
-  
+```
+POST http://localhost:8080/users
+```
+``` json
 {  
   "id": "1",  
   "balance": "100"
@@ -291,13 +286,11 @@ Content-Type: application/json
 
 #### Создание
 ##### Request
-```json
+```
 POST http://localhost:8080/users  
-Content-Type: application/json  
-  
-POST http://localhost:8080/order  
-Content-Type: application/json  
-  
+Content-Type: application/json
+```
+```json
 {  
   "orderId": "5",  
   "userId": "1",  
@@ -310,10 +303,11 @@ Content-Type: application/json
 {}
 ```
 ##### Request
-```json
+```
 POST http://localhost:8080/order  
-Content-Type: application/json  
-  
+Content-Type: application/json 
+```
+```json
 {  
   "orderId": "2",  
   "userId": "1",  
@@ -331,11 +325,12 @@ Content-Type: application/json
 ```
 
 #### Признание
-
 ##### Request
-```json
+```
 PATCH http://localhost:8080/user/  
 Content-Type: application/json  
+```
+```json
   
 {  
   "orderId": "1",  
@@ -350,14 +345,16 @@ Content-Type: application/json
 ```
 
 ##### Request
-```json
+```
 PATCH http://localhost:8080/user/  
-Content-Type: application/json  
-  
+Content-Type: application/json 
+```
+
+```json
 {  
   "orderId": "1",  
   "userId": "1",  
-  "serviceId": "2",  
+  "serviceId": "2"  
 }
 ```
 ##### Response
@@ -372,9 +369,8 @@ Content-Type: application/json
 #### Вывод
 
 ##### Request
-```json
-GET localhost:8080/trans/?id=1&sort=ASC&field=time_trans&list=1&limit=1  
-Content-Type: application/json
+```
+GET localhost:8080/trans/?id=1&sort=ASC&field=time_trans&list=1&limit=1
 ```
 ##### Response
 ```json
@@ -394,9 +390,8 @@ Content-Type: application/json
 ```
 
 ##### Request
-```json
-GET localhost:8080/trans/?id=1&sort=ASC&field=time_trans&list=1&limit=0  
-Content-Type: application/json
+```
+GET localhost:8080/trans/?id=1&sort=ASC&field=time_trans&list=1&limit=0
 ```
 ##### Response
 ```json
@@ -409,12 +404,11 @@ Content-Type: application/json
 
 #### Отчёт
 ##### Request
-```json
-GET localhost:8080/total/?year=2022&month=11  
-Content-Type: text/csv  
+```
+GET localhost:8080/total/?year=2022&month=11
 ```
 ##### Response
-``` text/csv
+``` 
 File saved in internship_backend_2022/files/total.csv
 ```
 ##### Пример файла
