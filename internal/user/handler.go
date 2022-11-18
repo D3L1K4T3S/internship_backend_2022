@@ -12,9 +12,10 @@ import (
 )
 
 const (
-	userURL  = "/user/"
-	usersURL = "/users/"
-	orderURL = "/order/"
+	userURL         = "/user/"
+	usersURL        = "/users/"
+	orderURL        = "/order/"
+	transactionsURL = "/trans/"
 )
 
 type handler struct {
@@ -31,10 +32,12 @@ func NewHandler(repository Repository, logger *logging.Logger) handlers.Handler 
 
 func (handler *handler) Register(router *httprouter.Router) {
 	router.HandlerFunc(http.MethodGet, userURL, apperror.Middleware(handler.GetBalance))
-	router.HandlerFunc(http.MethodPost, usersURL, apperror.Middleware(handler.AddingFunds))
+	//ПРоверить через метод PUT (был POST)
+	router.HandlerFunc(http.MethodPut, usersURL, apperror.Middleware(handler.AddingFunds))
 	router.HandlerFunc(http.MethodPost, orderURL, apperror.Middleware(handler.CreateOrder))
 	router.HandlerFunc(http.MethodPatch, userURL, apperror.Middleware(handler.RevenueRecognition))
 	router.HandlerFunc(http.MethodDelete, userURL, apperror.Middleware(handler.DeleteUser))
+	router.HandlerFunc(http.MethodGet, transactionsURL, apperror.Middleware(handler.GetTransactions))
 }
 
 // GetBalance godoc
@@ -177,6 +180,27 @@ func (handler *handler) RevenueRecognition(writer http.ResponseWriter, request *
 	return nil
 }
 
+// GetTransactions godoc
+// @Summary GetTransactions
+// @Description get transactions by user id
+// @Param       id, sort, list
+// @Tags User
+// @Success 200
+// @Failure 404
+// @Router getTransactions[get]
+func (handler *handler) GetTransactions(writer http.ResponseWriter, request *http.Request) error {
+	//var id, sort, list string
+	//id = request.URL.Query().Get("id")
+	//sort = request.URL.Query().Get("sort")
+	//list = request.URL.Query().Get("list")
+	//
+	//if id == "" {
+	//	return apperror.IncorrectRequest
+	//}
+
+	return nil
+}
+
 // DeleteUser godoc
 // @Summary DeleteUser
 // @Description Delete user from db
@@ -187,7 +211,18 @@ func (handler *handler) RevenueRecognition(writer http.ResponseWriter, request *
 // @Router revenueRecognition[delete]
 func (handler *handler) DeleteUser(writer http.ResponseWriter, request *http.Request) error {
 
-	//TODO: Добавить запрос на удаление конкретного пользователя
+	decoder := json.NewDecoder(request.Body)
+	var user User
+	err := decoder.Decode(&user)
+	if err != nil {
+		handler.logger.Info(err)
+		return err
+	}
+	err = handler.repository.DeleteUser(context.TODO(), user.Id)
+	if err != nil {
+		handler.logger.Info(err)
+		return err
+	}
 
 	return nil
 }

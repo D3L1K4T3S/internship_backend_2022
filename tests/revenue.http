@@ -1,0 +1,4 @@
+GET localhost:8080/total/?year=2022&month=11
+Content-Type: text/csv
+
+###

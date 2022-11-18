@@ -210,7 +210,7 @@ func (repository *repository) GetBalance(ctx context.Context, id string) (user.U
 
 func (repository *repository) RevenueRecognition(ctx context.Context, idUser, idOrder, amount string) error {
 
-	getReserved := `SELECT reserved FROM users WHERE idUser = $1`
+	getReserved := `SELECT reserved FROM users WHERE id = $1`
 	var res float64
 	if err := repository.client.QueryRow(ctx, getReserved, idUser).Scan(&res); err != nil {
 		if pgErr, ok := err.(*pgconn.PgError); ok {
@@ -241,10 +241,10 @@ func (repository *repository) RevenueRecognition(ctx context.Context, idUser, id
 		}
 
 		if pass {
-			changeStatus := `UPDATE orders SET status = $1 WHERE idUser = $2`
+			changeStatus := `UPDATE orders SET status = $1 WHERE id = $2`
 			repository.logger.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(changeStatus)))
 			_ = repository.client.QueryRow(ctx, changeStatus, Done, idOrder)
-			query := `UPDATE users SET reserved = reserved - $1 WHERE idUser = $2 RETURNING idUser`
+			query := `UPDATE users SET reserved = reserved - $1 WHERE id = $2 RETURNING id`
 			repository.logger.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(query)))
 			_ = repository.client.QueryRow(ctx, query, amount, idUser)
 		} else {
@@ -255,8 +255,8 @@ func (repository *repository) RevenueRecognition(ctx context.Context, idUser, id
 }
 
 func (repository *repository) GetTransactions(ctx context.Context, id string) ([]transactions.Transactions, error) {
-	//TODO: Реализовать пагинацию и сортировку
-	//TODO: Изменить запрос на вывод транзакция конкретного пользователя
+	// TODO: Реализовать пагинацию и сортировку
+	// TODO: Изменить запрос на вывод транзакция конкретного пользователя
 
 	var trns []transactions.Transactions
 
@@ -290,7 +290,20 @@ func (repository *repository) GetTransactions(ctx context.Context, id string) ([
 }
 
 func (repository *repository) DeleteUser(ctx context.Context, id string) error {
-	return nil
+
+	exist, err := repository.ExistUserId(ctx, id)
+	if err != nil {
+		repository.logger.Info(err)
+		return err
+	}
+	if exist {
+		query := `DELETE FROM users WHERE id = $1`
+		repository.logger.Trace(fmt.Sprintf("SQL Query: %s", formatQuery(query)))
+		_ = repository.client.QueryRow(ctx, query, id)
+		return nil
+	} else {
+		return apperror.NotFoundUser
+	}
 }
 
 func NewRepository(client postgreSQL.Client, logger *logging.Logger) user.Repository {

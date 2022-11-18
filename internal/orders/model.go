@@ -9,3 +9,8 @@ type Orders struct {
 	Cost          string `json:"cost,omitempty"`
 	Date          string `json:"date,omitempty"`
 }
+
+type ServiceTotal struct {
+	ServiceName string `json:"serviceName,omitempty"`
+	TotalAmount string `json:"totalAmount,omitempty"`
+}

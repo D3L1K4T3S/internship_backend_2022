@@ -7,6 +7,8 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 	_ "internship_bachend_2022/docs"
 	"internship_bachend_2022/internal/config"
+	"internship_bachend_2022/internal/orders"
+	ord "internship_bachend_2022/internal/orders/db/postgresql"
 	"internship_bachend_2022/internal/user"
 	usr "internship_bachend_2022/internal/user/db/postgresql"
 	"internship_bachend_2022/pkg/client/postgreSQL"
@@ -25,7 +27,6 @@ func main() {
 	logger.Info("create router")
 
 	router := httprouter.New()
-	logger.Info("register user handler")
 
 	logger.Info("swagger docs initializing")
 	router.Handler(http.MethodGet, "/swagger", http.RedirectHandler("/swagger/index.html", http.StatusMovedPermanently))
@@ -38,9 +39,13 @@ func main() {
 		logger.Fatal(err)
 	}
 
-	repository := usr.NewRepository(postgreSQLClient, logger)
-	handler := user.NewHandler(repository, logger)
-	handler.Register(router)
+	repositoryUser := usr.NewRepository(postgreSQLClient, logger)
+	handlerUser := user.NewHandler(repositoryUser, logger)
+	handlerUser.Register(router)
+
+	repositoryOrders := ord.NewRepository(postgreSQLClient, logger)
+	handlerOrders := orders.NewHandler(repositoryOrders, logger)
+	handlerOrders.Register(router)
 
 	startServer(router, cfg)
 }

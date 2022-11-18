@@ -1,0 +1,11 @@
+PATCH http://localhost:8080/user/
+Content-Type: application/json
+
+{
+  "orderId": "1",
+  "userId": "1",
+  "serviceId": "2",
+  "cost": "650"
+}
+
+###

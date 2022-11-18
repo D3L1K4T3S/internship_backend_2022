@@ -1,11 +1,4 @@
-PATCH http://localhost:8080/user/
+GET http://localhost:8080/user/?id=1
 Content-Type: application/json
-
-{
-  "orderId": "",
-  "userId": "",
-  "serviceId": "",
-  "cost": ""
-}
 
 ###

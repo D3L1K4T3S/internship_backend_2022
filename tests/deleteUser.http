@@ -1,0 +1,8 @@
+DELETE localhost:8080/user/
+Content-Type: application/json
+
+{
+  "id": "2"
+}
+
+###
